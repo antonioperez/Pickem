@@ -429,23 +429,8 @@ class Upsets(BaseHandler):
                         upsets.append(match)
                         
                     elif match.home in winners and  tally[match.home] <= tally[match.away]:
-                        upsets.append(match)
-                        
-                reddit_table_code = """
-**UPSET ALERT Week 17**
-
-| Votes   |Name    | Record   | Score | Record   |Name    | Votes   |
-|:-----------|------------:|:------------:|------------:|:------------:|------------:|:------------:|
-|3    |[](//#Cardinals) gamma42 **W**|7-9  |    26-21 |    10-6    | Jmffn[](//#Redskins)|     5|
-|1    |[](//#Lions) bigpops    **W** |9-7|    42-26  |     10-6    | Biosin [](//#Steelers)|     7|
-|2    |[](//#Ravens) spidermanjka2k **W**|9-7  |    31-17 |    8-8    | cantstopboston[](//#Vikings)|     6|
-|2    |[](//#Panthers) Indycolt87**W**|5-11  |35-28 |    7-9    | JFay82[](//#Jets)|     6|
-|2    |[](//#Broncos) Salvania **W**|2-14  |    31-10 |    6-10    | SkeadLegend[](//#Jaguars)|     6|
-|2    |[](//#49ers) Midgetmoose **W**|8-8  |    33-14 |    13-3    | Chaz[](//#Texans)|     7|
-|4    |[](//#Raiders) Kalashnikova **W**|8-8  |    28-24 |    10-6    | Karmali[](//#Chiefs)|     5|
-"""
-                                
-        self.render('management/upsets.html', reddit_table_code=reddit_table_code,streaks = streaks,upsets = upsets, league_info = league_info,
+                        upsets.append(match)         
+        self.render('management/upsets.html', streaks = streaks,upsets = upsets, league_info = league_info,
                                 week_url = week, tally = tally, records = records, teams = sorted(reddit_names.iterkeys()),
                                 reddit_names = reddit_names,winners = winners, all_weeks = sorted(league_info.weeks, key=lambda week: week.num,))   
          
