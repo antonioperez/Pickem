@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+		{% include 'management/top_nav.html' %}
+	<style>
+		textarea {
+			width: 80%;
+		}
+	</style>
+
+	<div align="left">
+
+		{% if message %}
+		<span class="alert alert-success">{{message}}</span>
+		{% endif %}
+
+		<br />
+		<br />
+		<pre>
+1. Highlight and copy week schedule from madden daddy
+2. Paste
+3. Add week number
+4. Submit
+
+ex. 
+WK 11 CARDINALS 2nd in nfc west(4-6-0) @goshzillaa 31   34 49ERS 1st in nfc west(5-5-0) @midgetmoose
+WK 11 JETS 2nd in afc east(5-5-0) @br3tt f4rve 21   31 FALCONS 2nd in nfc south(7-3-0) @turdslinger21
+WK 11 BROWNS 3rd in afc north(6-4-0) @billdoisland 24   21 RAIDERS 2nd in afc west(3-7-0) @maxisthedog4u
+WK 11 VIKINGS 1st in nfc north(6-4-0) @uppermosthat58 33   13 STEELERS 1st in afc north(6-4-0) @biosin24
+WK 11 PACKERS 2nd in nfc north(4-6-0) @arrroonn 24   28 COWBOYS 2nd in nfc east(7-3-0) @stillviper
+WK 11 CHIEFS 1st in afc west(6-4-0) @a faulty toyota 24   3 GIANTS 4th in nfc east(3-7-0) @kulosan125
+WK 11 PANTHERS 4th in nfc south(1-9-0) @indycolt1887 21   49 LIONS 3rd in nfc north(4-6-0) @packers33
+WK 11 RAMS 3rd in nfc west(3-7-0) @jeffiguritout 13   34 SAINTS 1st in nfc south(8-2-0) @l0sey0urself
+WK 11 TITANS 4th in afc south(4-6-0) @alphayasha 21   28 JAGUARS 3rd in afc south(5-5-0) @skead citizen
+WK 11 COLTS 1st in afc south(10-0-0) @kocyigit 31   21 TEXANS 2nd in afc south(9-1-0) @chazboski
+WK 11 RAVENS 2nd in afc north(7-3-0) @bruno 61 dfr 28   24 BRONCOS 4th in afc west(1-9-0) @shock saw
+WK 11 REDSKINS 3rd in nfc east(6-4-0) @jmffn360 23   24 EAGLES 1st in nfc east(10-0-0) @don xtitox
+WK 11 DOLPHINS 1st in afc east(9-0-0) @dysastrous 0   0 BILLS 4th in afc east(2-7-0) @the dragon
+WK 11 BENGALS 4th in afc north(3-6-0) @kic coffee atp 0   0 CHARGERS 3rd in afc west(1-8-0) @navy feel team
+WK 11 BUCCANEERS 3rd in nfc south(5-4-0) @gackrider 0   0 PATRIOTS 3rd in afc east(2-7-0) @intothemyst
+WK 11 BEARS 4th in nfc north(2-7-0) @gatorjes 0   0 SEAHAWKS 4th in nfc west(2-7-0) @rockthebass140
+</pre>		
+					
+					
+
+		<form method="post" class="well">
+			Week: <input type="text" name="week" /> <br />
+			<textarea rows="20"  name="matches" >	
+									
+				</textarea>
+
+			<br />
+			<input type="submit" name="submit" class="btn btn-info" />
+		</form>
+	</div>
+</body>
+{% endblock %}

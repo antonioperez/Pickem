@@ -1,0 +1,29 @@
+<div class="navbar navbar-fixed-top">
+
+			<div class="navbar">
+				<div class="navbar-inner">
+					<a class="brand" href="#">Pick em Management</a>
+					<ul class="nav">
+						{% if league_info %}
+						<li>
+							<a href="/{{league_info.name}}/year/{{league_info.year}}/manage/">Manage League</a>
+						</li>
+						<li>
+							<a href="/{{league_info.name}}/year/{{league_info.year}}/week/{{week}}">Choose Weekly Winners</a>
+						</li>
+						
+						
+
+						
+						<li>
+							<a href="/add/league/">Add New League</a>
+						</li>
+						<li>
+							<a href="/{{league_info.name}}/year/{{league_info.year}}/add/matches/">Add Week to League</a>
+						</li>
+					</ul>
+					{% endif %}
+				</div>
+			</div>
+</div>
+<br /><br /><br /><br />

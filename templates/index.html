@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Project 2</title>
+
+	</head>
+
+	<body >
+		<div id = 'board'></div>
+
+		<form name='form'>
+			<input type="button" value="New Game" onclick ="new_game();">
+			<br />
+			Timer
+			<input type="text" id="timer"  >
+			<br />
+
+		</form>
+
+	</body>
+
+	<script>
+		var num_rows = 16;
+		var num_cols = 16;
+		var num_mines = 40;
+		var tile_size = 24;
+		var start_time = 100;
+		var board = new Array(num_rows * num_cols);
+		var visib = new Array(num_rows * num_cols);
+
+		var start_timer = setInterval(update_timer, 1000);
+
+		function new_game() {
+			start_time = 100
+
+		}
+
+
+		function update_timer() {
+			start_time = start_time - 1;
+			if (start_time <= 0) {
+				clearInterval(start_timer);
+				return;
+			}
+			document.form.timer.value = start_time;
+		}
+
+		function clicked(n) {
+
+			visib[n] = true;
+			reveal(n);
+
+		}
+
+		function reveal(n) {
+			if (visib[n]) {
+				document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/3.svg";
+			}
+		}
+
+		function new_board() {
+
+			table = '<table  >';
+			c = 0;
+			for (var x = 0; x < num_rows; x++) {
+				table += '<tr>';
+				for (var i = 0; i < num_cols; i++) {
+
+					table += ' <td><a href="" onClick="clicked(' + c + ')" onContextMenu="return false;"> <img SRC="/static/img/1.jpg" WIDTH="' + tile_size + '" HEIGHT="' + tile_size + '"></a></td>';
+					c += 1;
+
+				}
+
+				table += '</tr>';
+			}
+			table += '</table>';
+
+			document.getElementById('board').innerHTML = table;
+		}
+
+		new_board();
+
+	</script>
+</html>

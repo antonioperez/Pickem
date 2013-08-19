@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+	{% include 'management/top_nav.html' %}
+	<link href="/static/css/teams.css" rel="stylesheet" type="text/css" />
+
+
+	<div align="center">
+		
+
+		<br />
+		<br />
+		<div>
+			<form method="get">
+
+				Week:
+				<select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+					{% for week in all_weeks %}
+					<option {% if week_url == week.num %}selected="selected" {%endif%} value='/{{league_info.name}}/year/{{league_info.year}}/week/{{week.num}}/winners/'>{{week.num}}</option>
+					{% endfor %}
+
+				</select>
+				
+			</form>
+
+
+<form method="post" name="polling">
+Voting: 
+<select name="poll_switch" onchange="this.form.submit();">
+	<option {% if curr_week.open_poll == True %} selected="selected" {%endif%} value = 'open' >ON</option>
+		<option {% if curr_week.open_poll == False %} selected="selected" {%endif%} value = 'close'>OFF</option>
+</select>
+	<input type="hidden"  name="voting_change" value="{{curr_week.key()}}"/>
+</form>
+		</div>
+
+		<form method="post">
+			<table class="table table-striped table-bordered table-hover ">
+
+				<thead>
+					<th>Reddit Name</th>
+					<th>Record</th>
+					<th>Away</th>
+					<th>@</th>
+					<th>Home</th>
+					<th>Record</th>
+					<th>Reddit Name</th>
+					<th>Winner</th>			
+
+				</thead>
+
+				<tbody >
+					{% for match in curr_week.matchups %}
+
+					<tr>
+						<td>{{reddit_names[match.away]}} </td>
+						<td> {{records[match.away]}}</td>
+						<td>
+						<input type="radio"  name='choice{{loop.index}}' value="{{match.away}}" />
+						<span class="#{{match.away}}"> </span>
+						<input type="hidden"  name="away_team{{loop.index}}" value="{{match.away}}"/>
+						<input type="hidden"  name="away_team_key{{loop.index}}" value="{{team_ids[match.away]}}"/>
+						</td>
+						<td></td>
+						<td>
+						<input type="hidden"  name="home_team{{loop.index}}" value="{{match.home}}"/>
+						<input type="hidden"  name="home_team_key{{loop.index}}" value="{{team_ids[match.home]}}"/>
+						<input type="radio"  name='choice{{loop.index}}'  value="{{match.home}}"/>
+						<input type="hidden"  name='match_key{{loop.index}}'  value="{{match.key()}}"/>
+						<span class="#{{match.home}}"> </span>
+						</td>
+						<td> {{records[match.home]}}</td>
+						<td>{{reddit_names[match.home]}} </td>
+						<td>{% if match.winner %}
+									<span class="#{{match.winner}}"> </span>
+								 
+							
+							
+							{% endif %}</td>
+						
+
+					</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+			<br />
+			<input type="hidden"  name="winner_sub" value="{{curr_week.key()}}"/>
+			<input type="submit" name="submit" class="btn btn-info" />
+		</form>
+	</div>
+
+
+	<script src="/static/jav/table-sorter.js"></script>
+</body>
+{% endblock %}

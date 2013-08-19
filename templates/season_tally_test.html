@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+
+	<div align="center">
+		<br />
+		<br />
+		<span>Total Games: {{games}}</span>
+		<table class="table table-striped table-bordered table-hover sortable">
+
+			<thead>
+				<th>Place</th>
+				<th>Reddit Name</th>
+				<th>Team</th>
+				{% for week,list in weeks_info.iteritems() %}
+				{% if list %}
+					<th>Week {{week}}</th>
+					{% endif %}
+				{% endfor %}
+				<th>Corrects</th>
+				<th>Total Votes</th>
+				<th>Vote Percent</th>
+
+			</thead>
+		
+	
+			<tbody >
+				{% for team in vote_percent %}
+				<tr>
+					<td>{{loop.index}}</td>
+					<td>{{reddit_names[team[0]]}}</td>
+					<td><span class="#{{team[0]}}"></span></td>
+					{% for week,list  in weeks_info.iteritems() %}
+					{% if list %}
+					<td>{% if not weekly_correct[team[0]][week]%} - {% else %} {{weekly_correct[team[0]][week]}}  {% endif %}</td>
+					{% endif %}
+					{% endfor %}
+					
+					
+					<td>{{corrects[team[0]]}}</td>
+					<td>{{totals[team[0]]}}</td>
+					
+					<td>{% if team[1] == 0.0 %} - {% else %} {{team[1]}}%  {% endif %}</td>
+
+				</tr>
+				{% endfor %}
+
+			</tbody>
+
+		</table>
+
+	</div>
+</body>
+{% endblock %}

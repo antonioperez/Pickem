@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+
+	<div align="center">	<br />
+		<br />
+<span class="alert alert-danger">Due to database read constraints, live voting tallies will not be show until voting poll has closed. 
+	</span>
+		<br />
+		<br />
+
+		<div>
+			<form method="get">
+
+				Week:
+				<select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+					{% for week in all_weeks %}
+					<option {% if week_url == week.num %}selected="selected" {%endif%} value='../{{week.num}}/'>{{week.num}}</option>
+					{% endfor %}
+
+				</select>
+
+			</form>
+
+		</div>
+
+		<form method="post">
+			<table class="table table-striped table-bordered table-hover sortable">
+
+				<thead>
+					<th>Votes</th>
+					<th>Reddit Name</th>
+					<th>Streak</th>
+					<th>Record</th>
+					<th>Away</th>
+					<th>@</th>
+					<th>Home</th>
+					<th>Record</th>
+					<th>Streak</th>
+					<th>Reddit Name</th>
+					<th>Votes</th>
+
+				</thead>
+
+				<tbody >
+					{% for match in curr_week.matchups %}
+
+					<tr>
+						<td>{% if tally[match.away] == 0 %} - {% else %} {{tally[match.away]}} {% endif %}</td>
+						<td>{{reddit_names[match.away]}}</td>
+						<td>{{streaks[match.away]}}</td>
+						<td>{{records[match.away]}}</td>
+						<td>
+						<input type="radio"  name='choice{{loop.index}}' value="{{match.away}}" />
+						
+						{% if match.away in winners  %}
+						<span class="#{{match.away}}"  ></span> <span class="label label-info pull-right">W</span>
+						
+						{% else  %}<span class="#{{match.away}}"></span>{% endif %}
+						
+						
+						</td>
+						
+						
+						<td></td>
+						
+						
+						<td>
+						<input type="radio"  name='choice{{loop.index}}'  value="{{match.home}}"/>
+							{% if match.home in winners  %}
+						<span class="#{{match.home}}"></span> <span class="label label-info pull-right">W</span>
+						
+						{% else  %}<span class="#{{match.home}}"></span>{% endif %}
+						
+						
+						</td>
+						<td>{{records[match.home]}}</td>
+						<td>{{streaks[match.home]}}</td>
+						<td>{{reddit_names[match.home]}}</td>
+						<td>{% if tally[match.home] == 0 %} - {% else %} {{tally[match.home]}} {% endif %}</td>
+
+					</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+			<br />
+			Your Team:
+			<!--<input type="text" name="userteam" /><span class="help-block">Bucs,49ers,Eagles,Cowboys,Steelers,Redskins..</span>-->
+			<select name="userteam">
+				{% for team in teams %}
+				{% if team != 'Buccaneers'%}
+				<option  value="{{team}}">{{team}}</option>
+				{% endif %}
+				{% endfor %}
+				
+			</select>
+			<br />
+			<input type="submit" name="submit"  class="btn btn-info"/>
+		</form>
+	</div>
+
+	<div align="center">
+		<br /> <br /> <br /><br /> <br /> <br />
+		<span class="alert alert-info">Total amount of correct picks this week.</span>
+		<br /> <br /> <br />
+		<table  class="table table-striped table-bordered table-hover table-condensed sortable " >
+
+			<thead>
+				<th>Team</th>
+				<th>Correct</th>
+
+			</thead>
+
+			<tbody>
+				{% for team in corrects %}
+				<tr>
+
+					<td><span class="#{{team[0]}}"></span></td>
+					<td>{% if team[1] == 0 %} - {% else %} {{team[1]}}  {% endif %}</td>
+
+				</tr>
+				{% endfor %}
+
+			</tbody>
+
+		</table>
+
+	</div>
+</body>
+{% endblock %}

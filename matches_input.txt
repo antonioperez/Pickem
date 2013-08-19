@@ -1,0 +1,19 @@
+{
+        'Redskins'  :  'Bucs',
+        'Ravens'  :   'Jets' ,
+        'Falcons'  :  'Bears' ,
+        'Bengals' :   'Texans', 
+        'Lions'    :'Vikings' ,
+        'Jaguars'   : 'Panthers' ,
+        'Seahawks'   : 'Eagles' ,
+        'Chiefs'  :  'Chargers' ,
+        'Bills' :   'Raiders' ,
+        'Titans' :   'Steelers', 
+        'Broncos' :   'Browns' ,
+        'Giants'  :  'Patriots' ,
+        'Cowboys'  :  'Cardinals' ,
+        'Rams'   :  '49ers' ,
+        'Saints'  :  'Packers', 
+        'Dolphins' :   'Colts' ,         
+
+            }

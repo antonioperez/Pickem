@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+	{% include 'management/top_nav.html' %}
+	<div align="center">
+
+		<br />
+		<br />
+<style>
+	#table-left td {text-align: left;}
+	
+</style>
+<span class="alert alert-info">
+	
+	
+	
+</span>
+		
+			<table id='table-left' class="table table-striped table-bordered table-hover">
+
+				<thead>
+					<th>Team</th>
+					<th>Wins</th>
+					<th>Losses</th>
+					<th>Reddit Name</th>
+					<th>Submit</th>
+					<th>success</th>
+
+				</thead>
+
+				<tbody >
+					{% for team in teams %}
+					<form method="post">
+					<tr>
+						<td>
+						
+						<span class="#{{team.team}}"> {{team.team}}</span></td>
+						<td><input type="text"  name="wins" value="{{team.wins}}"/></td>
+						<td><input type="text"  name="losses" value="{{team.losses}}"/></td>
+						<td><input type="text"  name="reddit_name" value="{{team.reddit_user}}"/>
+						</td>
+						<td><input type="submit" name="submit" class="btn btn-info" />
+							<input type="hidden" name="id" value="{{team.key()}}" />
+						</td>
+						<td>{{success[team.team]}}</td>
+					</tr>
+					</form>
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+			<br />
+			
+		
+	</div>
+
+</body>
+{% endblock %}
