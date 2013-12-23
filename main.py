@@ -39,8 +39,7 @@ teams_global = [
         'Cowboys'  ,  'Cardinals' ,
         'Rams'   ,  '49ers' ,
         'Saints'  ,  'Packers', 
-        'Dolphins' ,   'Colts' ,         
-            ]
+        'Dolphins' ,   'Colts' ,  ]
     
 class BaseHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -56,7 +55,6 @@ class BaseHandler(webapp2.RequestHandler):
 class VotingPoll(BaseHandler):
     def get(self,league,year,week):
         tally = {}
-        corrects = {}
         records = {}
         streaks = {}
         reddit_names = {}
@@ -67,7 +65,6 @@ class VotingPoll(BaseHandler):
             records[team] = '0-0'
             streaks[team] = 0
             tally[team] = 0
-            corrects[team] = 0
             
         league = str(league)
         year = int(year)
@@ -86,12 +83,9 @@ class VotingPoll(BaseHandler):
                         for vote in team.choices:
                             if (int(vote.week) == week) and (vote.choice in tally.keys()):
                                 tally[vote.choice] += 1
-                            if (int(vote.week) == week) and vote.choice in winners:
-                                corrects[team.team] += 1
         
         self.render('voting.html', streaks = streaks,curr_week = curr_week, league_info = league_info,
                                 week_url = week, tally = tally, records = records, teams = sorted(reddit_names.iterkeys()),
-                                corrects = sorted(corrects.items(), key= lambda x: x[1], reverse=True),
                                 reddit_names = reddit_names,winners = winners, all_weeks = sorted(league_info.weeks, key=lambda week: week.num,))   
          
     def post(self,league,year,week):
@@ -103,6 +97,7 @@ class VotingPoll(BaseHandler):
         
         choices = [self.request.get('choice'+str(x),None) for x in xrange(0,25) ]
         user_team = str(self.request.get('userteam')).lower().capitalize()
+        user_team = user_team.strip()
         
         curr_week = league_info.weeks.filter('num =',week).get()
         winners = curr_week.winner_list()
@@ -115,9 +110,9 @@ class VotingPoll(BaseHandler):
                     if choice not in winners:
                         Vote(team = team, choice = choice,week = week).put()
                     else:
-                        message += 'A choice you picked has already been selected as a winner. Ignored. \n'
+                        message += 'A choice you picked has already been selected as a winner. Ignored. \n\n\n'
         else:
-            message = 'Whoops, the voting poll might be closed.'
+            message = 'Whoops, the voting poll might be closed or you mispelled your team.'
         
         url = "/%s/year/%s/week/%s/" % (league,year,week)
                 
@@ -137,32 +132,6 @@ class AddLeague(BaseHandler):
                 Team(league = league_db,team = team).put()
         url = "/%s/year/%s/manage/" %(league,year)
         self.redirect(url)
-
-class AddMatches(BaseHandler):
-    def get(self,league,year,):
-        self.render('management/add_matches.html')
-    def post(self,league,year): 
-        message = ''
-        matches = {}
-        try:
-            matches = eval(str(self.request.get('matches')).strip()) #find better solution for converting string to dictionary
-            league = str(league)
-            year = int(year)
-            week = int(self.request.get('week'))
-            league_info = db.Query(League).filter('name =',league).filter('year =',year).get()
-        except:
-            self.render('whoops.html')
-        
-        if matches and league_info:
-            curr_week = Week(league = league_info,num = week).put()
-            if curr_week:
-                for away,home in matches.iteritems():
-                    Matchup(week = curr_week,away = away,home = home).put()
-                message = 'sucess'
-                
-                url = "/%s/year/%s/week/%s/" %(league,year,week)
-                self.redirect(url)
-        
 
 class ChooseWinner(BaseHandler):
     def get(self,league,year,week):
@@ -264,6 +233,7 @@ class Management(BaseHandler):
         
         wins = int(self.request.get('wins'))
         losses = int(self.request.get('losses'))
+        streak = int(self.request.get('streak'))
         reddit_user = str(self.request.get('reddit_name'))
         team_id = self.request.get('id')
         if league_info:
@@ -271,6 +241,7 @@ class Management(BaseHandler):
             update_team = Team.get(team_id)
             update_team.wins = wins
             update_team.losses = losses
+            update_team.streak = streak
             update_team.reddit_user = reddit_user
             success[update_team.team] = 'Success!'
             update_team.put()
@@ -282,7 +253,7 @@ class LeagueSearch(BaseHandler):
 
         self.render('search.html')
 
-class AllVotesTest(BaseHandler):
+class AllVotes(BaseHandler):
     def check_equal(self,iterator):
         return len(set(iterator)) <= 1
     
@@ -350,6 +321,7 @@ class AllVotesTest(BaseHandler):
                                 vote_percent=sorted(vote_percent.items(), key= lambda x: x[1], reverse=True), w = weeks_played,
                                 weeks_info=weeks_info,weekly_correct=weekly_correct)
         
+#Add matches in text bulk
 class AddMatchesMD(BaseHandler):
     def parse_matchups(self,matches):
         team_data = []
@@ -385,12 +357,10 @@ class AddMatchesMD(BaseHandler):
                 for away,home in matches.iteritems():
                     Matchup(week = curr_week,away = away,home = home).put()
                 message = 'sucess'
-                
                 url = "/%s/year/%s/week/%s/" %(league,year,week)
                 self.redirect(url)
 
 class Upsets(BaseHandler):
-    
     def get(self,league,year,week):
         tally = {}
         records = {}
@@ -434,16 +404,51 @@ class Upsets(BaseHandler):
                                 week_url = week, tally = tally, records = records, teams = sorted(reddit_names.iterkeys()),
                                 reddit_names = reddit_names,winners = winners, all_weeks = sorted(league_info.weeks, key=lambda week: week.num,))   
          
+class WeekChoices(BaseHandler):
+    def get(self,league,year,week):
+        reddit_names = {}
+        choices = {}
+        picks = {}
+        corrects = {}
+        tally = {}
         
+        for team in teams_global:
+            corrects[team] = 0
+            tally[team] = 0
+        league = str(league)
+        year = int(year)
+        week = int(week)
+        league_info = db.Query(League).filter('name =',league).filter('year =',year).get()
+        
+        if league_info:
+            curr_week = league_info.weeks.filter('num =',week).get()
+            if curr_week:
+                winners = curr_week.winner_list()
+                all_matches = curr_week.matchups
+                teams = league_info.teams
+                for team in teams:
+                    if team.week_picks(week):
+                        reddit_names[team.team] = team.reddit_user
+                        picks[team.team] = team.week_picks(week)
+                        choices[team.team] = {}
+                    for vote in team.choices:
+                        if (int(vote.week) == week) and vote.choice in winners:
+                            corrects[team.team] += 1
+                        if (int(vote.week) == week) and (vote.choice in tally.keys()):
+                            tally[vote.choice] += 1
+        self.render('management/team_choices.html', tally= tally, corrects = corrects, 
+                                                    picks = picks, matches = all_matches,   
+                                                    reddit_names = reddit_names,week_num = week,)   
+         
 
 app = webapp2.WSGIApplication([ (r'^/',LeagueSearch),
                                (r'^/([a-z]+)/year/([0-9]+)/week/([0-9]+)/',VotingPoll),
                                (r'^/add/league/',AddLeague),
-                              # (r'^/([a-z]+)/year/([0-9]+)/add/matches/',AddMatches),
                                (r'^/([a-z]+)/year/([0-9]+)/add/matches/',AddMatchesMD),
                                (r'^/([a-z]+)/year/([0-9]+)/week/([0-9]+)/winners/',ChooseWinner),
                                (r'^/([a-z]+)/year/([0-9]+)/week/([0-9]+)/upsets/',Upsets),
+                               (r'^/([a-z]+)/year/([0-9]+)/week/([0-9]+)/picks/',WeekChoices),
                                 (r'^/([a-z]+)/year/([0-9]+)/manage/',Management),
-                                 (r'^/([a-z]+)/year/([0-9]+)/all/',AllVotesTest),
+                                 (r'^/([a-z]+)/year/([0-9]+)/all/',AllVotes),
                                ],
                               debug=True)

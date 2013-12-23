@@ -51,11 +51,19 @@ class Team(db.Model):
     
     def votes_num(self):
         return len([team for team in self.choices])
+    #the hell?
+    def week_picks(self,week_num):
+        votes = {}
+        for ch in self.choices:
+            if week_num == ch.week:
+                votes[ch.choice] = ch.choice
+        return votes
+            
 
 class Vote(db.Model):
     team = db.ReferenceProperty(Team, collection_name='choices')
     week = db.IntegerProperty(required = True)
     choice = db.StringProperty(required = True)
     correct = db.BooleanProperty(required = False, default = False)
-    create_date = db.DateProperty(auto_now_add=True)
+    create_date = db.DateTimeProperty(auto_now_add=True)
 

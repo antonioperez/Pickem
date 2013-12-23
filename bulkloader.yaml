@@ -1,4 +1,5 @@
 
+#cvs upload not working
 python_preamble:
 - import: base64
 - import: re

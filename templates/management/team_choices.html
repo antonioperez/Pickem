@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+
+	<div align="center">
+		<br />
+		<br />
+		<span>Week: {{week_num}}</span><br>
+		
+		
+			<span><u>Reddit Names</u></span>
+		<table class="table table-striped table-bordered table-hover table-condensed">
+
+			<thead>
+				<th>Game</th>
+				{% if reddit_names %}
+				{% for team,name in reddit_names.iteritems() %}
+				{% if team %}
+					<th> {{name}}</th>
+					{% endif %}
+				{% endfor %}
+				{% endif %}
+
+			</thead>
+		
+	
+			<tbody >
+				<tr>
+					<td>Corrects</td>
+					
+				{% for team,name in reddit_names.iteritems() %}
+				<td>	
+							{% if corrects[team] %}
+							 {{corrects[team]}}
+							 {% else %}
+							 -
+							{% endif %}
+							
+				</td>
+				{% endfor %}
+					
+				</tr>
+				{% if matches %}
+				{% for match in matches %}
+				<tr><td>
+					
+					{% if match.home == match.winner %}
+					<span class="label label-info pull-left">W</span><span class="#{{match.home}}"></span> vs <span class="#{{match.away}}"></span>
+					{% endif %}
+					{% if match.away == match.winner %}
+					<span class="#{{match.home}}"></span> vs <span class="#{{match.away}}"></span><span class="label label-info pull-right">W</span>
+					{% endif %}
+					
+					</td>
+				{% for team,name in reddit_names.iteritems() %}
+				<td>	
+							{% if picks[team][match.home] %}
+							 <span class="#{{picks[team][match.home]}}"></span> 
+							{% endif %}
+							{% if picks[team][match.away] %}
+							 <span class="#{{picks[team][match.away]}}"></span> 
+							{% endif %}
+				</td>
+				{% endfor %}
+
+				
+				</tr>
+				{% endfor %}{% endif %}
+				
+			</tbody>
+
+		</table>
+
+
+
+	</div>
+</body>
+{% endblock %}

@@ -57,19 +57,22 @@ Voting:
 					<tr>
 						<td>{{reddit_names[match.away]}} </td>
 						<td> {{records[match.away]}}</td>
-						<td>
+						<td><label>
 						<input type="radio"  name='choice{{loop.index}}' value="{{match.away}}" />
 						<span class="#{{match.away}}"> </span>
 						<input type="hidden"  name="away_team{{loop.index}}" value="{{match.away}}"/>
 						<input type="hidden"  name="away_team_key{{loop.index}}" value="{{team_ids[match.away]}}"/>
+						</label>
 						</td>
 						<td></td>
 						<td>
+							<label>
 						<input type="hidden"  name="home_team{{loop.index}}" value="{{match.home}}"/>
 						<input type="hidden"  name="home_team_key{{loop.index}}" value="{{team_ids[match.home]}}"/>
 						<input type="radio"  name='choice{{loop.index}}'  value="{{match.home}}"/>
 						<input type="hidden"  name='match_key{{loop.index}}'  value="{{match.key()}}"/>
 						<span class="#{{match.home}}"> </span>
+						</label>
 						</td>
 						<td> {{records[match.home]}}</td>
 						<td>{{reddit_names[match.home]}} </td>

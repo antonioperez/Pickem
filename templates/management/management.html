@@ -23,6 +23,7 @@
 					<th>Team</th>
 					<th>Wins</th>
 					<th>Losses</th>
+					<th>Streak</th>
 					<th>Reddit Name</th>
 					<th>Submit</th>
 					<th>success</th>
@@ -39,6 +40,8 @@
 						<td><input type="text"  name="wins" value="{{team.wins}}"/></td>
 						<td><input type="text"  name="losses" value="{{team.losses}}"/></td>
 						<td><input type="text"  name="reddit_name" value="{{team.reddit_user}}"/>
+						</td>
+						<td><input type="text"  name="streak" value="{{team.streak}}"/>
 						</td>
 						<td><input type="submit" name="submit" class="btn btn-info" />
 							<input type="hidden" name="id" value="{{team.key()}}" />
