@@ -1,3 +1,6 @@
+current site: ccpickem.appspot.com/
+
+
 
 Unfortunately I haven't got around to correctly mapping the website with an admin interface, so you will have to remember the urls to use the website. Also, user auth was next on my list as anybody can know the management urls and mess with the information.
 The bulk of this project was done in a span of two days, which lead to some funky code. I was a bit inexperienced and making the code functional was my priority.  
