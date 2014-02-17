@@ -36,9 +36,6 @@ class Matchup(db.Model):
                 loser.streak = 0
             loser.streak -= 1
             loser.put()
-            
-
-    
 
 class Team(db.Model):
     league = db.ReferenceProperty(League, collection_name='teams')
@@ -51,7 +48,7 @@ class Team(db.Model):
     
     def votes_num(self):
         return len([team for team in self.choices])
-    #the hell?
+
     def week_picks(self,week_num):
         votes = {}
         for ch in self.choices:
@@ -59,7 +56,6 @@ class Team(db.Model):
                 votes[ch.choice] = ch.choice
         return votes
             
-
 class Vote(db.Model):
     team = db.ReferenceProperty(Team, collection_name='choices')
     week = db.IntegerProperty(required = True)
